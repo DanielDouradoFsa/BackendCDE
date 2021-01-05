@@ -7,17 +7,6 @@ class PlanoEscolhidoSchema extends Schema {
   up () {
     this.create('plano_escolhidos', (table) => {
       table.increments('id')
-      table.integer('id_plano_parceiro').unsigned()
-      .references('id')
-      .inTable('planos')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE');
-
-      table.integer('id_parceiro').unsigned()
-      .references('id')
-      .inTable('parceiros')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE');
 
       table.integer('id_banco_cde').unsigned()
       .references('id')
@@ -47,15 +36,14 @@ class PlanoEscolhidoSchema extends Schema {
       table.date('data_emissao').notNullable()
       table.date('data_final').notNullable()
       table.boolean('plano_ativo').notNullable()
-      table.string('razao_nome', 100).notNullable()
       table.date('data_vencimento').notNullable()
       table.decimal('valor_plano', 10, 2).notNullable()
       table.decimal('multa_percentual', 6, 2).notNullable()
-      table.decimal('multa_valor', 9, 2).notNullable()
-      table.decimal('juros_valor', 9, 2).notNullable()
+      table.decimal('multa_valor', 9, 2)
+      table.decimal('juros_valor', 9, 2)
       table.decimal('juros_percentual', 9, 2).notNullable()
       table.decimal('valor_pago', 10, 2).notNullable()
-      table.date('data_pagamento').notNullable()
+      table.date('data_pagamento')
       table.timestamps()
     })
   }

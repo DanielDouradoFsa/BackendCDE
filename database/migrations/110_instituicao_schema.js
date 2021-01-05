@@ -31,6 +31,7 @@ class InstituicaoSchema extends Schema {
       table.integer('max_dependentes').notNullable()
       table.integer('responsavel_fone_ddd').notNullable()
       table.bigInteger('responsavel_fone_numero').notNullable()
+      table.bigInteger('CNPJ').notNullable()
 
       table.timestamps()
     })

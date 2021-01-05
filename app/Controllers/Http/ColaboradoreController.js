@@ -25,7 +25,6 @@ class ColaboradoreController {
    */
   async index({ request, response, view }) {
     try {
-      // const colaboradores = Colaborador.query().with('endereco').fetch()
       const colaboradores = await Database
         .select('*')
         .table('colaboradores')

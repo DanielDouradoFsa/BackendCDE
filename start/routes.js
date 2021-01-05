@@ -24,13 +24,19 @@ Route.get('/', () => {
 /**ROTAS LOGIN */
 Route.delete('/user/:id_user','UserController.destroy').middleware("auth")
 Route.post('/login', 'UserController.login').middleware('guest')
-Route.get('/dataLogin', 'UserController.dataLogin').middleware('auth')
+Route.get('/dataLogin/:id_user', 'UserController.dataLogin').middleware('auth')
 
 /**ROTAS COLABORADOR */
 Route.post('/colaborador', 'ColaboradoreController.store')
 Route.get('/colaborador/:id', 'ColaboradoreController.show').middleware("auth")
 Route.patch('/colaborador/:id', 'ColaboradoreController.update').middleware("auth")
 Route.get('/colaborador', 'ColaboradoreController.index').middleware("auth")
+
+/**ROTAS Instituicao */
+Route.post('/instituicao', 'InstituicaoController.store')
+Route.get('/instituicao/:id', 'InstituicaoController.show').middleware("auth")
+Route.patch('/instituicao/:id', 'InstituicaoController.update').middleware("auth")
+Route.get('/instituicao', 'InstituicaoController.index').middleware("auth")
 
 /*ROTAS DE PARCEIROS*/
 Route.get('/parceiros','ParceiroController.index').middleware("auth")
