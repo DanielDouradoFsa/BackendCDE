@@ -12,11 +12,11 @@
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use('Factory')
-const Plano =  use('App/Models/CategoriaParceiro')
+const CategoriaParceiro =  use('App/Models/CategoriaParceiro')
 
 class CategoriaParceiroSeeder {
   async run () {
-   await Plano.create({
+   await CategoriaParceiro.create({
       categoria_descricao : "Mercadinho"
     })
   }

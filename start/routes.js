@@ -1,5 +1,8 @@
 'use strict'
 
+const CategoriaInstituicaoController = require('../app/Controllers/Http/CategoriaInstituicaoController')
+const SeguimentoParceiroController = require('../app/Controllers/Http/SeguimentoParceiroController')
+
 /*
 |--------------------------------------------------------------------------
 | Routes
@@ -37,6 +40,21 @@ Route.post('/instituicao', 'InstituicaoController.store')
 Route.get('/instituicao/:id', 'InstituicaoController.show').middleware("auth")
 Route.patch('/instituicao/:id', 'InstituicaoController.update').middleware("auth")
 Route.get('/instituicao', 'InstituicaoController.index').middleware("auth")
+Route.post('/categoriaInstituicao', 'CategoriaInstituicaoController.store').middleware("auth")
+Route.patch('/categoriaInstituicao/:id', 'CategoriaInstituicaoController.update').middleware("auth")
+Route.get('/categoriaInstituicao/', 'CategoriaInstituicaoController.index').middleware("auth")
+
+/**ROTAS parceiro */
+Route.post('/parceiro', 'ParceiroController.store')
+Route.get('/parceiro/:id', 'ParceiroController.show').middleware("auth")
+Route.patch('/parceiro/:id', 'ParceiroController.update').middleware("auth")
+Route.get('/parceiro', 'ParceiroController.index').middleware("auth")
+Route.post('/categoriaParceiro', 'CategoriaParceiroController.store').middleware("auth")
+Route.patch('/categoriaParceiro/:id', 'CategoriaParceiroController.update').middleware("auth")
+Route.get('/categoriaParceiro', 'CategoriaParceiroController.index').middleware("auth")
+Route.post('/segmentoParceiro', 'SeguimentoParceiroController.store').middleware("auth")
+Route.patch('/segmentoParceiro/:id', 'SeguimentoParceiroController.update').middleware("auth")
+Route.get('/segmentoParceiro', 'SeguimentoParceiroController.index').middleware("auth")
 
 /*ROTAS DE ASSOCIADOS*/
 Route.get('/associados','AssociadoController.index').middleware("auth")

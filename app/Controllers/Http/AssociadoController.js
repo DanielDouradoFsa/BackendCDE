@@ -141,12 +141,12 @@ class AssociadoController {
         bairro,
         id_instituicao,
         id_foto } = request.all()
-      if (!ValidaCPF.testaCPF(cpf))
-        return response.status(400).send({
-          "message": "CPF inválido",
-          "field": "CPF",
-          "validation": "ValidacaoCNPJ"
-        })
+      // if (!ValidaCPF.testaCPF(cpf))
+      //   return response.status(400).send({
+      //     "message": "CPF inválido",
+      //     "field": "CPF",
+      //     "validation": "ValidacaoCNPJ"
+      //   })
       if (isDependente && id_associado != null) {
         const { max_dependentes } = await Instituicao.findBy("id", id_instituicao)
         const dependentes = await Database.from('associados')
@@ -262,10 +262,18 @@ class AssociadoController {
   async destroy({ params, request, response }) {
     try {
       const associado = await Associado.findBy('id', request.params.id)
-      let associadosParaSeremInativados=[]
       const dependentes = await Database.from('associados')
-          .where('id_associado', associado.id)
-      console.log(dependentes)
+        .where('id_associado', associado.id)
+        .innerJoin('users', 'associados.id_user', 'users.id')
+        for (var i in dependentes) {
+          const usuarioDependente = await User.findBy('id', dependentes[i].id_user)
+          usuarioDependente.ativo = false
+          usuarioDependente.save()
+        }
+      const usuarioTitular = await User.findBy('id', associado.id_user)
+      usuarioTitular.ativo = false
+      usuarioTitular.save()
+      return response.status(201).send({ message: 'Associado inativado com sucesso!' });
     } catch (err) {
       return response.status(400).send({
         error: `Erro: ${err.message}`

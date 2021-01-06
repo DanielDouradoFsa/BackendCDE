@@ -7,6 +7,7 @@
 /**
  * Resourceful controller for interacting with pivoparceirosegmentos
  */
+const PivoParceiroSegmento = use("App/Models/PivoParceiroSegmento")
 class PivoParceiroSegmentoController {
   /**
    * Show a list of all pivoparceirosegmentos.
@@ -17,7 +18,7 @@ class PivoParceiroSegmentoController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index({ request, response, view }) {
   }
 
   /**
@@ -29,7 +30,7 @@ class PivoParceiroSegmentoController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create ({ request, response, view }) {
+  async create({ request, response, view }) {
   }
 
   /**
@@ -40,7 +41,20 @@ class PivoParceiroSegmentoController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store({ request, response }) {
+    const trx = await Database.beginTransaction()
+    try {
+      await PivoParceiroSegmento({
+        id_segmento: request.body.id_segmento,
+        id_parceiro: request.body.id_parceiro
+      })
+      await trx.commit()
+    } catch (err) {
+      await trx.rollback()
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**
@@ -52,7 +66,7 @@ class PivoParceiroSegmentoController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show({ params, request, response, view }) {
   }
 
   /**
@@ -64,7 +78,7 @@ class PivoParceiroSegmentoController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit ({ params, request, response, view }) {
+  async edit({ params, request, response, view }) {
   }
 
   /**
@@ -75,7 +89,7 @@ class PivoParceiroSegmentoController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update({ params, request, response }) {
   }
 
   /**
@@ -86,7 +100,7 @@ class PivoParceiroSegmentoController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy({ params, request, response }) {
   }
 }
 

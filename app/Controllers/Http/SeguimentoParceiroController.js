@@ -6,6 +6,8 @@
 /**
  * Resourceful controller for interacting with seguimentoparceiros
  */
+const Database = use('Database')
+const SegmentoParceiro = use("App/Models/SegmentoParceiro")
 class SeguimentoParceiroController {
   /**
    * Show a list of all seguimentoparceiros.
@@ -17,6 +19,17 @@ class SeguimentoParceiroController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    try {
+      const segmentoParceiro = await Database
+        .select('*')
+        .table('segmento_parceiros')
+        .innerJoin('categoria_parceiros','segmento_parceiros.id_categoria','categoria_parceiros.id')
+      response.send(segmentoParceiro)
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**
@@ -42,24 +55,31 @@ class SeguimentoParceiroController {
   async store ({ request, response }) {
     const trx = await Database.beginTransaction()
     try {
+      const erroMessage = {
+        "seguimento_descricao.required":"Campo obrigatório"
+      }
+      const validation = await validateAll(request.all(), {
+        segmento_descricao: 'required'
+      }, erroMessage)
+
+      if (validation.fails()) {
+        return response.status(400).send({
+          message: validation.messages()
+        })
+      }
       const {
-        uf,
-     
+        id_categoria,
+        segmento_descricao
       } = request.all()
 
-      const categoriaParceiro = await categoriaParceiro.create({
-        id_categoria: categoriaParceiro.id,
-        segmento_descricao:segmento_descricao
-      }, trx)
-
-      const segmentoParceiro = await segmentoEndereco.create({
-        id_categoria: categoriaParceiro.id,
+      const segmentoParceiro = await SegmentoParceiro.create({
+        id_categoria: id_categoria,
         segmento_descricao:segmento_descricao
       }, trx)
 
       await trx.commit()
 
-      return response.status(201).send({ message: 'Endereço criado com sucesso' });
+      return response.status(201).send({ message: 'Segmento criado com sucesso' });
     } catch (err) {
         await trx.rollback()
         return response.status(400).send({
@@ -101,6 +121,34 @@ class SeguimentoParceiroController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    const trx = await Database.beginTransaction()
+    try {
+      const erroMessage = {
+        'segmento_descricao.min': 'Escreva uma descrição maior',
+      }
+      const validation = await validateAll(request.all(), {
+        segmento_descricao: 'min:10',
+      }, erroMessage)
+
+      if (validation.fails()) {
+        return response.status(400).send({
+          message: validation.messages()
+        })
+      }
+      const segmentoParceiro = await SegmentoParceiro.findBy('id', request.params.id)
+
+      const segmentoParceiroReq = await request.only([
+        "segmento_descricao",
+      ])
+      segmentoParceiro.merge({ ...segmentoParceiroReq})
+      await segmentoParceiro.save(trx)
+      await trx.commit()
+      return response.status(201).send({ message: 'Segmento alterado com sucesso' });
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**

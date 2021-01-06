@@ -7,6 +7,8 @@
 /**
  * Resourceful controller for interacting with categoriainstituicaos
  */
+const Database = use('Database')
+const CategoriaInstituicao = use("App/Models/CategoriaInstituicao")
 class CategoriaInstituicaoController {
   /**
    * Show a list of all categoriainstituicaos.
@@ -18,6 +20,16 @@ class CategoriaInstituicaoController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    try {
+      const categoriaInstituicao = await Database
+        .select('*')
+        .table('categoria_instituicaos')
+      response.send(categoriaInstituicao)
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**
@@ -41,6 +53,34 @@ class CategoriaInstituicaoController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    const trx = await Database.beginTransaction()
+    try {
+      const erroMessage = {
+        "descricao_categoria.required":"Campo obrigatório"
+      }
+      const validation = await validateAll(request.all(), {
+        descricao_categoria: 'required'
+      }, erroMessage)
+
+      if (validation.fails()) {
+        return response.status(400).send({
+          message: validation.messages()
+        })
+      }
+      const {
+        descricao_categoria
+      } =  request.all()
+      await Categoriainstituicao.create({
+        descricao_categoria
+      },trx)
+      await trx.commit()
+      return response.status(201).send({ message: 'Categoria criada com sucesso' });
+    } catch (err) {
+      await trx.rollback()
+        return response.status(400).send({
+          error: `Erro: ${err.message}`
+        })
+    }
   }
 
   /**
@@ -76,6 +116,34 @@ class CategoriaInstituicaoController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    const trx = await Database.beginTransaction()
+    try {
+      const erroMessage = {
+        'descricao_categoria.min': 'Escreva uma descrição maior',
+      }
+      const validation = await validateAll(request.all(), {
+        descricao_categoria: 'min:10',
+      }, erroMessage)
+
+      if (validation.fails()) {
+        return response.status(400).send({
+          message: validation.messages()
+        })
+      }
+      const categoriainstituicao = await CategoriaInstituicao.findBy('id', request.params.id)
+
+      const categoriainstituicaoReq = await request.only([
+        "descricao_categoria",
+      ])
+      categoriainstituicao.merge({ ...categoriainstituicaoReq})
+      await categoriainstituicao.save(trx)
+      await trx.commit()
+      return response.status(201).send({ message: 'Categoria alterada com sucesso' });
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**

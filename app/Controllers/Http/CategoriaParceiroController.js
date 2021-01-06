@@ -7,6 +7,8 @@
 /**
  * Resourceful controller for interacting with categoriaparceiros
  */
+const Database = use('Database')
+const CategoriaParceiro = use("App/Models/CategoriaParceiro")
 class CategoriaParceiroController {
   /**
    * Show a list of all categoriaparceiros.
@@ -17,7 +19,17 @@ class CategoriaParceiroController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index({ request, response, view }) {
+    try {
+      const categoriaParceiro = await Database
+        .select('*')
+        .table('categoria_parceiros')
+      response.send(categoriaParceiro)
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**
@@ -29,7 +41,7 @@ class CategoriaParceiroController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create ({ request, response, view }) {
+  async create({ request, response, view }) {
   }
 
   /**
@@ -40,8 +52,35 @@ class CategoriaParceiroController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store({ request, response }) {
+    const trx = await Database.beginTransaction()
+    try {
+      const erroMessage = {
+        "categoria_descricao.required": "Campo obrigatório"
+      }
+      const validation = await validateAll(request.all(), {
+        categoria_descricao: 'required'
+      }, erroMessage)
 
+      if (validation.fails()) {
+        return response.status(400).send({
+          message: validation.messages()
+        })
+      }
+      const {
+        categoria_descricao
+      } = request.all()
+      await CategoriaParceiro.create({
+        categoria_descricao
+      }, trx)
+      await trx.commit()
+      return response.status(201).send({ message: 'Categoria criada com sucesso' });
+    } catch (err) {
+      await trx.rollback()
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**
@@ -53,7 +92,7 @@ class CategoriaParceiroController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show({ params, request, response, view }) {
   }
 
   /**
@@ -65,7 +104,7 @@ class CategoriaParceiroController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit ({ params, request, response, view }) {
+  async edit({ params, request, response, view }) {
   }
 
   /**
@@ -76,7 +115,35 @@ class CategoriaParceiroController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update({ params, request, response }) {
+    const trx = await Database.beginTransaction()
+    try {
+      const erroMessage = {
+        'categoria_descricao.min': 'Escreva uma descrição maior',
+      }
+      const validation = await validateAll(request.all(), {
+        categoria_descricao: 'min:10',
+      }, erroMessage)
+
+      if (validation.fails()) {
+        return response.status(400).send({
+          message: validation.messages()
+        })
+      }
+      const categoriaParceiro = await CategoriaParceiro.findBy('id', request.params.id)
+
+      const categoriaParceiroReq = await request.only([
+        "categoria_descricao",
+      ])
+      categoriaParceiro.merge({ ...categoriaParceiroReq })
+      await categoriaParceiro.save(trx)
+      await trx.commit()
+      return response.status(201).send({ message: 'Categoria alterada com sucesso' });
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**
@@ -87,7 +154,7 @@ class CategoriaParceiroController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy({ params, request, response }) {
   }
 }
 
