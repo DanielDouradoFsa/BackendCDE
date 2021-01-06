@@ -42,7 +42,7 @@ class PlanoEscolhidoSchema extends Schema {
       table.decimal('multa_valor', 9, 2)
       table.decimal('juros_valor', 9, 2)
       table.decimal('juros_percentual', 9, 2).notNullable()
-      table.decimal('valor_pago', 10, 2).notNullable()
+      table.decimal('valor_pago', 10, 2)
       table.date('data_pagamento')
       table.timestamps()
     })

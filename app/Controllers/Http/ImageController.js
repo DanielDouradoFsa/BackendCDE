@@ -51,7 +51,6 @@ class ImageController {
         size: '2mb'
       })
       const valor = request.body.razaoSocial
-      console.log(valor)
       await images.moveAll(Helpers.tmpPath('uploads'), file => ({
         name: `${Date.now()}-${file.clientName}-${request.body.razaoSocial}.jpeg`
       }))

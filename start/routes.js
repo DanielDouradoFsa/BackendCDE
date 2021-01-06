@@ -38,11 +38,12 @@ Route.get('/instituicao/:id', 'InstituicaoController.show').middleware("auth")
 Route.patch('/instituicao/:id', 'InstituicaoController.update').middleware("auth")
 Route.get('/instituicao', 'InstituicaoController.index').middleware("auth")
 
-/*ROTAS DE PARCEIROS*/
-Route.get('/parceiros','ParceiroController.index').middleware("auth")
-Route.post('/parceiros', 'ParceiroController.store')
-Route.get('/parceiros/:id_user','ParceiroController.show').middleware("auth")
-Route.patch('/parceiros/:id_user','ParceiroController.update').middleware("auth")
+/*ROTAS DE ASSOCIADOS*/
+Route.get('/associados','AssociadoController.index').middleware("auth")
+Route.post('/associados', 'AssociadoController.store')
+Route.get('/associados/:id','AssociadoController.show').middleware("auth")
+Route.patch('/associados/:id','AssociadoController.update').middleware("auth")
+Route.delete('/associados/:id','AssociadoController.destroy').middleware("auth")
 
 Route.post('/criaImagem', 'ImageController.store')
 Route.get('/criaImagem/:path','ImageController.show')
