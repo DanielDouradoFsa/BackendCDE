@@ -13,6 +13,9 @@ class Cde extends Model {
     dadosBancarioBoleto(){
         return this.hasOne('./DadosBancariosBoleto')
     }
+    user(){
+        return this.belongsTo('./User')
+    }
 }
 
 module.exports = Cde

@@ -111,6 +111,23 @@ class ImageController {
    * @param {Response} ctx.response
    */
   async update({ params, request, response }) {
+    const trx = await Database.beginTransaction()
+    try {
+      const imagem = await Image.findBy('id',request.params.id)
+      const imagemReq = request.only([
+        "path" 
+      ])
+      imagem.merge({...imagemReq})
+      imagem.save(trx)
+      await trx.commit()
+      
+      return response.status(201).send({ message: 'Imagem alterado com sucesso' });
+    } catch (err) {
+      await trx.rollback()
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**

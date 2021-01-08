@@ -9,6 +9,7 @@
  */
 const Database = use('Database')
 const CategoriaInstituicao = use("App/Models/CategoriaInstituicao")
+const { validateAll } = use('Validator')
 class CategoriaInstituicaoController {
   /**
    * Show a list of all categoriainstituicaos.
@@ -70,7 +71,7 @@ class CategoriaInstituicaoController {
       const {
         descricao_categoria
       } =  request.all()
-      await Categoriainstituicao.create({
+      await CategoriaInstituicao.create({
         descricao_categoria
       },trx)
       await trx.commit()

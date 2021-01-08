@@ -27,7 +27,7 @@ Route.get('/', () => {
 /**ROTAS LOGIN */
 Route.delete('/user/:id_user','UserController.destroy').middleware("auth")
 Route.post('/login', 'UserController.login').middleware('guest')
-Route.get('/dataLogin/:id_user', 'UserController.dataLogin').middleware('auth')
+Route.get('/dataLogin', 'UserController.dataLogin').middleware('auth')
 
 /**ROTAS COLABORADOR */
 Route.post('/colaborador', 'ColaboradoreController.store')
@@ -35,7 +35,7 @@ Route.get('/colaborador/:id', 'ColaboradoreController.show').middleware("auth")
 Route.patch('/colaborador/:id', 'ColaboradoreController.update').middleware("auth")
 Route.get('/colaborador', 'ColaboradoreController.index').middleware("auth")
 
-/**ROTAS Instituicao */
+/**ROTAS INSTITUICAO */
 Route.post('/instituicao', 'InstituicaoController.store')
 Route.get('/instituicao/:id', 'InstituicaoController.show').middleware("auth")
 Route.patch('/instituicao/:id', 'InstituicaoController.update').middleware("auth")
@@ -44,7 +44,7 @@ Route.post('/categoriaInstituicao', 'CategoriaInstituicaoController.store').midd
 Route.patch('/categoriaInstituicao/:id', 'CategoriaInstituicaoController.update').middleware("auth")
 Route.get('/categoriaInstituicao/', 'CategoriaInstituicaoController.index').middleware("auth")
 
-/**ROTAS parceiro */
+/**ROTAS PARCEIRO*/
 Route.post('/parceiro', 'ParceiroController.store')
 Route.get('/parceiro/:id', 'ParceiroController.show').middleware("auth")
 Route.patch('/parceiro/:id', 'ParceiroController.update').middleware("auth")
@@ -56,12 +56,20 @@ Route.post('/segmentoParceiro', 'SeguimentoParceiroController.store').middleware
 Route.patch('/segmentoParceiro/:id', 'SeguimentoParceiroController.update').middleware("auth")
 Route.get('/segmentoParceiro', 'SeguimentoParceiroController.index').middleware("auth")
 
-/*ROTAS DE ASSOCIADOS*/
+/*ROTAS ASSOCIADOS*/
 Route.get('/associados','AssociadoController.index').middleware("auth")
 Route.post('/associados', 'AssociadoController.store')
 Route.get('/associados/:id','AssociadoController.show').middleware("auth")
 Route.patch('/associados/:id','AssociadoController.update').middleware("auth")
 Route.delete('/associados/:id','AssociadoController.destroy').middleware("auth")
 
-Route.post('/criaImagem', 'ImageController.store')
-Route.get('/criaImagem/:path','ImageController.show')
+/*ROTAS IMAGEM*/
+Route.post('/imagem', 'ImageController.store')
+Route.get('/imagem/:path','ImageController.show')
+Route.patch('/imagem/:id','ImageController.update')
+
+/*ROTAS ADMINISTRADOR */
+Route.post('/cde', 'CdeController.store')
+Route.get('/cde/:id', 'CdeController.show').middleware("auth")
+Route.patch('/cde/:id', 'CdeController.update').middleware("auth")
+Route.get('/cde', 'CdeController.index').middleware("auth")
