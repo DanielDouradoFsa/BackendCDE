@@ -221,6 +221,7 @@ class InstituicaoController {
         data_pagamento,
         descricao_forma_pagamento
       } = request.all()
+      console.log(email)
       const user = await User.create({
         email,
         password,
