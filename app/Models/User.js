@@ -38,6 +38,15 @@ class User extends Model {
   entidade (){
     return this.hasOne('./Entidade')
   }
+  associado (){
+    return this.hasOne('./Associado')
+  }
+  cde (){
+    return this.hasOne('./Cde')
+  }
+  colaborador (){
+    return this.hasOne('./Colaboradore')
+  }
   
 }
 

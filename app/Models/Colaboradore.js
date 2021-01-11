@@ -17,6 +17,9 @@ class Colaboradore extends Model {
     image(){
         return this.hasOne('./Image')
     }
+    user(){
+        return this.belongsTo('./User')
+    }
 }
 
 module.exports = Colaboradore

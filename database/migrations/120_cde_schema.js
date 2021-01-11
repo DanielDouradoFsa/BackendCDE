@@ -10,7 +10,7 @@ class CdeSchema extends Schema {
       
       table.string('razao_social', 100).notNullable()
       table.string('fantasia', 50).notNullable()
-      table.integer('cnpj').notNullable()
+      table.bigInteger('cnpj').notNullable()
       
 
       table.integer('id_endereco').unsigned()

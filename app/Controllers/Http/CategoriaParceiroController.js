@@ -9,6 +9,7 @@
  */
 const Database = use('Database')
 const CategoriaParceiro = use("App/Models/CategoriaParceiro")
+const { validateAll } = use('Validator')
 class CategoriaParceiroController {
   /**
    * Show a list of all categoriaparceiros.
@@ -122,7 +123,7 @@ class CategoriaParceiroController {
         'categoria_descricao.min': 'Escreva uma descrição maior',
       }
       const validation = await validateAll(request.all(), {
-        categoria_descricao: 'min:10',
+        categoria_descricao: 'min:5',
       }, erroMessage)
 
       if (validation.fails()) {

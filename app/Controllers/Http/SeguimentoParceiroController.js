@@ -8,6 +8,7 @@
  */
 const Database = use('Database')
 const SegmentoParceiro = use("App/Models/SegmentoParceiro")
+const { validateAll } = use('Validator')
 class SeguimentoParceiroController {
   /**
    * Show a list of all seguimentoparceiros.
@@ -127,7 +128,7 @@ class SeguimentoParceiroController {
         'segmento_descricao.min': 'Escreva uma descrição maior',
       }
       const validation = await validateAll(request.all(), {
-        segmento_descricao: 'min:10',
+        segmento_descricao: 'min:5',
       }, erroMessage)
 
       if (validation.fails()) {

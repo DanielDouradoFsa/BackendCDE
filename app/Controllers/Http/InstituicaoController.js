@@ -40,11 +40,6 @@ class InstituicaoController {
         .innerJoin('telefones', 'entidades.id_telefone', 'telefones.id')
         .innerJoin('enderecos','entidades.id_endereco','enderecos.id')
         .innerJoin('users','entidades.id_user','users.id')
-        //.innerJoin('images','entidades.id_imagem1','images.id')
-        //.innerJoin('images','entidades.id_imagem2','images.id')
-        // .innerJoin('images','entidades.id_imagem3','images.id')
-        // .innerJoin('images','entidades.id_imagem4','images.id')
-        // .innerJoin('images','entidades.id_imagem5','images.id')
       response.send(entidades)
     } catch (err) {
       return response.status(400).send({
@@ -425,11 +420,6 @@ class InstituicaoController {
       const entidade = await Entidade.findBy('id', instituicao.id_entidade)
       const endereco = await Endereco.findBy('id', entidade.id_endereco)
       const telefone = await Telefone.findBy('id', entidade.id_telefone)
-      const image1 = await Image.findBy('id', entidade.id_imagem1)
-      const image2 = await Image.findBy('id', entidade.id_imagem2)
-      const image3 = await Image.findBy('id', entidade.id_imagem3)
-      const image4 = await Image.findBy('id', entidade.id_imagem4)
-      const image5 = await Image.findBy('id', entidade.id_imagem5)
       const user = await User.findBy('id', entidade.id_user)
 
       const entidadeReq = await request.only([
@@ -441,6 +431,11 @@ class InstituicaoController {
         "link_facebook",
         "link_instagram",
         "Perfil",
+        "id_imagem1",
+        "id_imagem2",
+        "id_imagem3",
+        "id_imagem4",
+        "id_imagem5"
       ])
       const instituicaoReq = request.only([
         "data_primeira_adesao",
@@ -468,30 +463,11 @@ class InstituicaoController {
         "email",
         "password",
       ])
-      const image1Req = request.only([
-        "path"
-      ])
-      const image2Req = request.only([
-        "path"
-      ])
-      const image3Req = request.only([
-        "path"
-      ])
-      const image4Req = request.only([
-        "path"
-      ])
-      const image5Req = request.only([
-        "path"
-      ])
+     
       instituicao.merge({ ...instituicaoReq })
       entidade.merge({ ...entidadeReq })
       telefone.merge({ ...telefoneReq })
       endereco.merge({ ...enderecoReq })
-      image1.merge({ ...image1Req })
-      image2.merge({ ...image2Req })
-      image3.merge({ ...image3Req })
-      image4.merge({ ...image4Req })
-      image5.merge({ ...image5Req })
       user.merge({ ...userReq })
 
       await instituicao.save(trx)
