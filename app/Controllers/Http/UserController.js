@@ -27,6 +27,9 @@ class UserController {
                 })
               }
             const { email, password, tipo } = request.only(['email', 'password', 'tipo'])
+            console.log(email)
+            console.log(password)
+            console.log(tipo)
             const user = await User.findBy('email', email)
             if (!user)
                 return response.status(400).send({

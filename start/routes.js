@@ -27,7 +27,7 @@ Route.get('/', () => {
 /**ROTAS LOGIN */
 Route.delete('/user/:id_user','UserController.destroy').middleware("auth")
 Route.post('/login', 'UserController.login').middleware('guest')
-Route.get('/dataLogin', 'UserController.dataLogin').middleware('auth')
+Route.get('/dataLogin', 'UserController.dataLogin')
 
 /**ROTAS COLABORADOR */
 Route.post('/colaborador', 'ColaboradoreController.store')
