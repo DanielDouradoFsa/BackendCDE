@@ -46,10 +46,12 @@ class ImageController {
   async store({ params, request, response }) {
     const trx = await Database.beginTransaction()
     try {
-      const images = request.file('image', {
+      /*{
         types: ['image'],
         size: '2mb'
-      })
+      } */
+      const images = request.file('image')
+      console.log(images)
       const valor = request.body.razaoSocial
       await images.moveAll(Helpers.tmpPath('uploads'), file => ({
         name: `${Date.now()}-${file.clientName}-${request.body.razaoSocial}.jpeg`

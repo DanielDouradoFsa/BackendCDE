@@ -7,6 +7,8 @@
 /**
  * Resourceful controller for interacting with formapagamentos
  */
+const Database = use('Database')
+const FormaPagamento = use('App/Models/FormaPagamento')
 class FormaPagamentoController {
   /**
    * Show a list of all formapagamentos.
@@ -18,6 +20,16 @@ class FormaPagamentoController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    try {
+      const dadosBancarios = await Database
+        .select('*')
+        .table('forma_pagamentos')
+      response.send(dadosBancarios)
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**
@@ -41,6 +53,22 @@ class FormaPagamentoController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    const trx = await Database.beginTransaction()
+    try {
+      const {
+        descricao_forma_pagamento,
+      } = request.all()
+      await FormaPagamento.create({
+        descricao_forma_pagamento
+      },trx)
+      await trx.commit()
+      return response.status(201).send({ message: 'Forma de pagamento criada com sucesso!' });
+    } catch (err) {
+      await trx.rollback()
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**

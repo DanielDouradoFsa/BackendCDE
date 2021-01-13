@@ -7,6 +7,7 @@
 /**
  * Resourceful controller for interacting with dadosbancariosboletos
  */
+const Database = use('Database')
 class DadosBancariosBoletoController {
   /**
    * Show a list of all dadosbancariosboletos.
@@ -18,6 +19,16 @@ class DadosBancariosBoletoController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    try {
+      const dadosBancarios = await Database
+        .select('*')
+        .table('dados_bancarios_boletos')
+      response.send(dadosBancarios)
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**

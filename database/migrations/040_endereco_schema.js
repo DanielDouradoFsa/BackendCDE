@@ -12,7 +12,7 @@ class EnderecoSchema extends Schema {
       table.integer('numero').notNullable()
       table.string('complemento', 30).notNullable()
       table.string('bairro', 40).notNullable()
-      table.string('uf', 2).notNullable()
+      table.string('uf', 20).notNullable()
       table.string('cidade', 40).notNullable()
       table.timestamps()
     })

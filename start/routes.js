@@ -1,6 +1,8 @@
 'use strict'
 
 const CategoriaInstituicaoController = require('../app/Controllers/Http/CategoriaInstituicaoController')
+const DadosBancariosBoletoController = require('../app/Controllers/Http/DadosBancariosBoletoController')
+const PlanoInstituicaoController = require('../app/Controllers/Http/PlanoInstituicaoController')
 const SeguimentoParceiroController = require('../app/Controllers/Http/SeguimentoParceiroController')
 
 /*
@@ -27,7 +29,7 @@ Route.get('/', () => {
 /**ROTAS LOGIN */
 Route.delete('/user/:id_user','UserController.destroy').middleware("auth")
 Route.post('/login', 'UserController.login').middleware('guest')
-Route.get('/dataLogin', 'UserController.dataLogin').middleware('auth')
+Route.get('/dataLogin', 'UserController.dataLogin').middleware("auth")
 
 /**ROTAS COLABORADOR */
 Route.post('/colaborador', 'ColaboradoreController.store')
@@ -73,3 +75,8 @@ Route.post('/cde', 'CdeController.store')
 Route.get('/cde/:id', 'CdeController.show').middleware("auth")
 Route.patch('/cde/:id', 'CdeController.update').middleware("auth")
 Route.get('/cde', 'CdeController.index').middleware("auth")
+
+Route.get('/planosInstituicao', 'PlanoInstituicaoController.index').middleware("auth")
+Route.get('/dadosBancarios', 'DadosBancariosBoletoController.index').middleware("auth")
+Route.get('/formasPagamento', 'FormaPagamentoController.index').middleware("auth")
+Route.post('/formasPagamento', 'FormaPagamentoController.store').middleware("auth")

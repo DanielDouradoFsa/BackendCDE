@@ -46,7 +46,7 @@ class UserController {
                     await Cde.findByOrFail('id_user', user.id)
             } catch (err) {
                 return response.status(400).send({
-                    error: `Erro: ${err.message}`
+                    error: `Verifique o tipo escolhido no login`
                 })
             }
             const validaToken = await auth.attempt(email, password)

@@ -16,21 +16,22 @@ const PlanoInstituicao = use('App/Models/PlanoInstituicao')
 const Plano = use('App/Models/Plano')
 
 class PlanoInstituicaoSeeder {
-  async run () {
-    
-    const plano = await Plano.create({
-      descricao_reduzida : "descrição aaaaaa",
-      descricao_completa : "descrição  aaaaaaaaaaaaaa",
-      valor_plano: 150.00,
-      validade_plano: "2020/08/10",
-      plano_status: true})
+  async run() {
 
-     await PlanoInstituicao.create({
-      id_plano : plano.id,
+    const plano = await Plano.create({
+      descricao_reduzida: "descrição aaaaaa",
+      descricao_completa: "descrição  aaaaaaaaaaaaaa",
+      valor_plano: 150.00,
+      validade_plano: "2020-08-10",
+      plano_status: true
+    })
+
+    await PlanoInstituicao.create({
+      id_plano: plano.id,
       limite_dependentes: 50
-    
-  })
-}
+
+    })
+  }
 
 }
 

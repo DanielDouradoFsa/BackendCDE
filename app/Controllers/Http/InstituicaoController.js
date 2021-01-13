@@ -171,7 +171,6 @@ class InstituicaoController {
       }
       const {
         email,
-        ativo,
         password, //USER
         uf,
         cidade,
@@ -225,7 +224,6 @@ class InstituicaoController {
       const user = await User.create({
         email,
         password,
-        ativo,
         username: email
       }, trx)
       const endereco = await Endereco.create({
