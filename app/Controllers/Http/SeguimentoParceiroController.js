@@ -22,8 +22,22 @@ class SeguimentoParceiroController {
   async index ({ request, response, view }) {
     try {
       const segmentoParceiro = await Database
-        .select('*')
+        .select('*','segmento_parceiros.id as pk')
         .table('segmento_parceiros')
+        .innerJoin('categoria_parceiros','segmento_parceiros.id_categoria','categoria_parceiros.id')
+      response.send(segmentoParceiro)
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
+  }
+  async indexPorCategoria ({ request, response, view }) {
+    try {
+      const segmentoParceiro = await Database
+        .select('*','segmento_parceiros.id as pk')
+        .table('segmento_parceiros')
+        .where('id_categoria',request.params.idCategoria)
         .innerJoin('categoria_parceiros','segmento_parceiros.id_categoria','categoria_parceiros.id')
       response.send(segmentoParceiro)
     } catch (err) {

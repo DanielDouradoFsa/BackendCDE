@@ -10,8 +10,10 @@
 
 const Database = use('Database')
 const Endereco = use('App/Models/Endereco')
+const Plano = use('App/Models/Plano')
 const Parceiro = use('App/Models/Parceiro')
 const Telefone = use('App/Models/Telefone')
+const PivoParceiroSegmento = use('App/Models/PivoParceiroSegmento')
 const Image = use('App/Models/Image')
 const User = use('App/Models/User')
 const Entidade = use('App/Models/Entidade')
@@ -38,7 +40,7 @@ class ParceiroController {
   async index({ request, response, view }) {
     try {
       const parceiros = await Database
-        .select('*')
+        .select('*','parceiros.id as pk')
         .table('entidades')
         .innerJoin('parceiros', 'entidades.id', 'parceiros.id_Entidade')
         .innerJoin('telefones', 'entidades.id_telefone', 'telefones.id')
@@ -78,24 +80,19 @@ class ParceiroController {
       const erroMessage = {
         'email.unique': 'Valor já cadastrado no Sistema',
         'email.email': 'Escreva no formato email@email.com',
-        'uf.integer': 'Insira apenas valores numéricos',
         'cep.integer': 'Insira apenas valores numéricos',
         'numero.integer': 'Insira apenas valores numéricos',
         'fone_fixo_ddd.integer': 'Insira apenas valores numéricos',
         'fone_fixo_numero.integer': 'Insira apenas valores numéricos',
         'celular_ddd.integer': 'Insira apenas valores numéricos',
         'celular_numero.integer': 'Insira apenas valores numéricos',//TELEFONE
-        'cpf_cnpj.integer': 'Insira apenas valores numéricos',
         'desconto_percentual.integer': 'Insira apenas valores numéricos',
         'responsavel_cpf.integer': 'Insira apenas valores numéricos',
-        'valor_plano.integer': 'Insira apenas valores numéricos',
-        'multa_percentual.integer': 'Insira apenas valores numéricos',
-        'juros_percentual.integer': 'Insira apenas valores numéricos',
       }
       const validation = await validateAll(request.all(), {
         email: 'required |unique:users|email',
         password: 'required', //USER
-        uf: 'required |integer',
+        uf: 'required',
         cidade: 'required',
         cep: 'required |integer',
         rua: 'required',
@@ -106,8 +103,7 @@ class ParceiroController {
         fone_fixo_numero: 'required |integer',
         celular_ddd: 'required |integer',
         celular_numero: 'required |integer',//TELEFONE
-        cpf_cnpj: 'required |integer',
-        nome_responsavel: 'required',
+        cpf_cnpj: 'required',
         desconto_percentual: 'required|integer',
         tipo_pessoa_fj: 'required',//PARCEIRO
         razao_social: 'required',
@@ -122,10 +118,6 @@ class ParceiroController {
         data_final: 'required',
         plano_ativo: 'required',
         data_vencimento: 'required',
-        valor_plano: 'required |integer',
-        multa_percentual: 'required|integer',
-        juros_percentual: 'required|integer',
-        descricao_forma_pagamento: 'required'
       }, erroMessage)
 
       if (validation.fails()) {
@@ -149,7 +141,6 @@ class ParceiroController {
         celular_ddd,
         celular_numero,//TELEFONE
         cpf_cnpj,
-        nome_responsavel,
         desconto_percentual,
         tipo_pessoa_fj,//PARCEIRO
         razao_social,
@@ -173,14 +164,12 @@ class ParceiroController {
         data_final,
         plano_ativo,
         data_vencimento,
-        valor_plano,
-        multa_percentual,
         multa_valor,
         juros_valor,
-        juros_percentual,
         valor_pago,
         data_pagamento,
-        descricao_forma_pagamento
+        id_forma_pagamento,
+        id_segmento_parceiro
       } = request.all()
       const user = await User.create({
         email,
@@ -223,28 +212,27 @@ class ParceiroController {
       }, trx)
       const parceiro = await Parceiro.create({
         cpf_cnpj,
-        nome_responsavel,
         desconto_percentual,
         tipo_pessoa_fj,
         id_entidade: entidade.id,
       }, trx)
-      const formaPagamento = await FormaPagamento.create({
-        descricao_forma_pagamento
-      }, trx)
+      const pivoParceiroSegmento = await PivoParceiroSegmento.create({
+        id_parceiro:parceiro.id,
+        id_segmento:id_segmento_parceiro
+      },trx)
+      const plano = await Plano.findBy('id',id_plano_parceiro)
       const planoEscolhido = await PlanoEscolhido.create({
+        valor_plano:plano.valor_plano,
         id_banco_cde,
         id_colaborador_vendedor,
         id_colaborador_digitador,
-        id_forma_pagamento: formaPagamento.id,
+        id_forma_pagamento,
         data_emissao,
         data_final,
         plano_ativo,
         data_vencimento,
-        valor_plano,
-        multa_percentual,
         multa_valor,
         juros_valor,
-        juros_percentual,
         valor_pago,
         data_pagamento,
       }, trx)
@@ -321,7 +309,6 @@ class ParceiroController {
       const erroMessage = {
         'email.unique': 'Valor já cadastrado no Sistema',
         'email.email': 'Escreva no formato email@email.com',
-        'uf.integer': 'Insira apenas valores numéricos',
         'cep.integer': 'Insira apenas valores numéricos',
         'numero.integer': 'Insira apenas valores numéricos',
         'fone_fixo_ddd.integer': 'Insira apenas valores numéricos',
@@ -334,25 +321,17 @@ class ParceiroController {
         'CNPJ.integer': 'Insira apenas valores numéricos',
         'CNPJ.unique': 'Valor já cadastrado no Sistema',
         'responsavel_cpf.integer': 'Insira apenas valores numéricos',
-        'valor_plano.integer': 'Insira apenas valores numéricos',
-        'multa_percentual.integer': 'Insira apenas valores numéricos',
-        'juros_percentual.integer': 'Insira apenas valores numéricos',
       }
       const validation = await validateAll(request.all(), {
         email: 'unique:users|email',
-        uf: 'integer',
         cep: 'integer',
         numero: 'integer',
         fone_fixo_ddd: 'integer',
         fone_fixo_numero: 'integer',
         celular_ddd: 'integer',
         celular_numero: 'integer',//TELEFONE
-        cpf_cnpj: 'integer',
         desconto_percentual: 'integer',
         responsavel_cpf: 'integer',
-        valor_plano: 'integer',
-        multa_percentual: 'integer',
-        juros_percentual: 'integer',
       }, erroMessage)
 
       if (validation.fails()) {
@@ -383,7 +362,6 @@ class ParceiroController {
       ])
       const parceiroReq = request.only([
         "cpf_cnpj",
-        "nome_responsavel",
         "desconto_percentual",
         "tipo_pessoa_fj",
       ])

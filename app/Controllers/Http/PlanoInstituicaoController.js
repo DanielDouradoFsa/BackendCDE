@@ -21,7 +21,7 @@ class PlanoInstituicaoController {
   async index({ request, response, view }) {
     try {
       const planos = await Database
-        .select('*')
+        .select('*','plano_instituicaos.id as pk')
         .table('plano_instituicaos')
         .innerJoin('planos', 'plano_instituicaos.id', 'planos.id')
       response.send(planos)

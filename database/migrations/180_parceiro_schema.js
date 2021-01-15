@@ -15,7 +15,6 @@ class ParceiroSchema extends Schema {
       .onDelete('CASCADE');
 
       table.string('cpf_cnpj', 12).notNullable()
-      table.string('nome_responsavel',60).notNullable()
       table.integer('desconto_percentual').notNullable()
       table.string('tipo_pessoa_fj', 1).notNullable()
       table.timestamps()

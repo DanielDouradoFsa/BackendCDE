@@ -23,7 +23,7 @@ class CategoriaParceiroController {
   async index({ request, response, view }) {
     try {
       const categoriaParceiro = await Database
-        .select('*')
+        .select('*','categoria_parceiros.id as pk')
         .table('categoria_parceiros')
       response.send(categoriaParceiro)
     } catch (err) {

@@ -25,6 +25,8 @@ class DadosBancariosBoletoSchema extends Schema {
       table.string('layout', 4).notNullable()
       table.string('codigo_cedente', 12).notNullable()
       table.string('pix', 20).notNullable()
+      table.decimal('juros_percentual', 9, 2).notNullable()
+      table.decimal('multa_percentual', 6, 2).notNullable()
     
       table.timestamps()
     })

@@ -65,7 +65,9 @@ class DadosBoletoBancarioSeeder {
       convenio:'7',
       layout:'8',
       codigo_cedente:'1',
-      pix:'asdads'
+      pix:'asdads',
+      multa_percentual:"23",
+      juros_percentual:"20"
     })
   }
 }

@@ -19,6 +19,20 @@ class PivoParceiroSegmentoController {
    * @param {View} ctx.view
    */
   async index({ request, response, view }) {
+    try {
+      const entidades = await Database
+        .select('*','instituicaos.id as pk')
+        .table('entidades')
+        .innerJoin('instituicaos','entidades.id','instituicaos.id_entidade')
+        .innerJoin('telefones', 'entidades.id_telefone', 'telefones.id')
+        .innerJoin('enderecos','entidades.id_endereco','enderecos.id')
+        .innerJoin('users','entidades.id_user','users.id')
+      response.send(entidades)
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**

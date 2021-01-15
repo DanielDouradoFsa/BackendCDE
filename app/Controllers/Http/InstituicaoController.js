@@ -12,6 +12,8 @@ const Request = require('@adonisjs/framework/src/Request')
 const Database = use('Database')
 const Endereco = use('App/Models/Endereco')
 const Telefone = use('App/Models/Telefone')
+const Plano = use('App/Models/Plano')
+const PlanoInstituicao = use('App/Models/PlanoInstituicao')
 const Image = use('App/Models/Image')
 const User = use('App/Models/User')
 const Entidade = use('App/Models/Entidade')
@@ -34,7 +36,7 @@ class InstituicaoController {
   async index({ request, response, view }) {
     try {
       const entidades = await Database
-        .select('*')
+        .select('*','instituicaos.id as pk')
         .table('entidades')
         .innerJoin('instituicaos','entidades.id','instituicaos.id_entidade')
         .innerJoin('telefones', 'entidades.id_telefone', 'telefones.id')
@@ -77,7 +79,7 @@ class InstituicaoController {
         'email.email': 'Escreva no formato email@email.com',
         'password.required': 'Esse campo é obrigatório', //USER
         'uf.required': 'Esse campo é obrigatório',
-        'uf.integer': 'Insira apenas valores numéricos',
+        // 'uf.integer': 'Insira apenas valores numéricos',
         'cidade.required': 'Esse campo é obrigatório',
         'cep.required': 'Esse campo é obrigatório',
         'cep.integer': 'Insira apenas valores numéricos',
@@ -116,20 +118,12 @@ class InstituicaoController {
         'Perfil.required': 'Esse campo é obrigatório',
         'data_emissao.required': 'Esse campo é obrigatório',
         'data_final.required': 'Esse campo é obrigatório',
-        'plano_ativo.required': 'Esse campo é obrigatório',
         'data_vencimento.required': 'Esse campo é obrigatório',
-        'valor_plano.required': 'Esse campo é obrigatório',
-        'valor_plano.integer': 'Insira apenas valores numéricos',
-        'multa_percentual.required': 'Esse campo é obrigatório',
-        'multa_percentual.integer': 'Insira apenas valores numéricos',
-        'juros_percentual.required': 'Esse campo é obrigatório',
-        'juros_percentual.integer': 'Insira apenas valores numéricos',
-        'descricao_forma_pagamento.required': 'Esse campo é obrigatório',
       }
       const validation = await validateAll(request.all(), {
         email: 'required |unique:users|email',
         password: 'required', //USER
-        uf: 'required |integer',
+        uf: 'required',
         cidade: 'required',
         cep: 'required |integer',
         rua: 'required',
@@ -156,12 +150,7 @@ class InstituicaoController {
         Perfil: 'required',
         data_emissao: 'required',
         data_final: 'required',
-        plano_ativo: 'required',
         data_vencimento: 'required',
-        valor_plano: 'required |integer',
-        multa_percentual: 'required|integer',
-        juros_percentual: 'required|integer',
-        descricao_forma_pagamento: 'required'
       }, erroMessage)
 
       if (validation.fails()) {
@@ -209,16 +198,13 @@ class InstituicaoController {
         id_colaborador_digitador,
         data_emissao,
         data_final,
-        plano_ativo,
         data_vencimento,
-        valor_plano,
-        multa_percentual,
         multa_valor,
         juros_valor,
-        juros_percentual,
         valor_pago,
         data_pagamento,
-        descricao_forma_pagamento
+        id_forma_pagamento,
+        // descricao_forma_pagamento
       } = request.all()
       console.log(email)
       const user = await User.create({
@@ -272,23 +258,22 @@ class InstituicaoController {
         id_entidade: entidade.id,
         id_responsavel_cargo: tipoCargoResponsavel.id
       }, trx)
-      const formaPagamento = await FormaPagamento.create({
-        descricao_forma_pagamento
-      }, trx)
+      // const formaPagamento = await FormaPagamento.create({
+      //   descricao_forma_pagamento
+      // }, trx)
+      const planoInstituicao = await PlanoInstituicao.findBy('id',id_plano_instituicao)
+      const plano = await Plano.findBy('id',planoInstituicao.id_plano)
       const planoEscolhido = await PlanoEscolhido.create({
+        valor_plano:plano.valor_plano,
         id_banco_cde,
         id_colaborador_vendedor,
         id_colaborador_digitador,
-        id_forma_pagamento: formaPagamento.id,
+        id_forma_pagamento,
         data_emissao,
         data_final,
-        plano_ativo,
         data_vencimento,
-        valor_plano,
-        multa_percentual,
         multa_valor,
         juros_valor,
-        juros_percentual,
         valor_pago,
         data_pagamento,
       }, trx)
@@ -374,7 +359,7 @@ class InstituicaoController {
       const erroMessage = {
         'email.unique': 'Valor já cadastrado no Sistema',
         'email.email': 'Escreva no formato email@email.com',
-        'uf.integer': 'Insira apenas valores numéricos',
+        // 'uf.integer': 'Insira apenas valores numéricos',
         'cep.integer': 'Insira apenas valores numéricos',
         'numero.integer': 'Insira apenas valores numéricos',
         'fone_fixo_ddd.integer': 'Insira apenas valores numéricos',
@@ -387,9 +372,6 @@ class InstituicaoController {
         'CNPJ.integer': 'Insira apenas valores numéricos',
         'CNPJ.unique': 'Valor já cadastrado no Sistema',
         'responsavel_cpf.integer': 'Insira apenas valores numéricos',
-        'valor_plano.integer': 'Insira apenas valores numéricos',
-        'multa_percentual.integer': 'Insira apenas valores numéricos',
-        'juros_percentual.integer': 'Insira apenas valores numéricos',
       }
       const validation = await validateAll(request.all(), {
         email: 'unique:users|email',
@@ -405,9 +387,6 @@ class InstituicaoController {
         responsavel_fone_numero: 'integer',
         CNPJ: 'integer |unique:instituicaos',
         responsavel_cpf: 'integer',
-        valor_plano: 'integer',
-        multa_percentual: 'integer',
-        juros_percentual: 'integer',
       }, erroMessage)
 
       if (validation.fails()) {

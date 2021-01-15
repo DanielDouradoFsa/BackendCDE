@@ -26,12 +26,13 @@ class ColaboradoreController {
   async index({ request, response, view }) {
     try {
       const colaboradores = await Database
-        .select('*')
         .table('colaboradores')
         .innerJoin('telefones', 'colaboradores.id_telefone', 'telefones.id')
         .innerJoin('enderecos','colaboradores.id_endereco','enderecos.id')
         .innerJoin('users','colaboradores.id_user','users.id')
         .innerJoin('images','colaboradores.id_foto','images.id')
+        .select('*','colaboradores.id as pk')
+        
       response.send(colaboradores)
     } catch (err) {
       return response.status(400).send({

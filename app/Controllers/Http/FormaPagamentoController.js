@@ -22,7 +22,7 @@ class FormaPagamentoController {
   async index ({ request, response, view }) {
     try {
       const dadosBancarios = await Database
-        .select('*')
+        .select('*','forma_pagamentos.id as pk')
         .table('forma_pagamentos')
       response.send(dadosBancarios)
     } catch (err) {

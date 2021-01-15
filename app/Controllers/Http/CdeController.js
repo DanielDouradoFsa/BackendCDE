@@ -29,7 +29,7 @@ class CdeController {
   async index({ request, response, view }) {
     try {
       const administrador = await Database
-        .select('*')
+        .select('*','cdes.id as pk')
         .table('cdes')
         .innerJoin('telefones', 'cdes.id_telefone', 'telefones.id')
         .innerJoin('enderecos','cdes.id_endereco','enderecos.id')

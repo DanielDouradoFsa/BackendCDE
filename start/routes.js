@@ -57,6 +57,7 @@ Route.get('/categoriaParceiro', 'CategoriaParceiroController.index').middleware(
 Route.post('/segmentoParceiro', 'SeguimentoParceiroController.store').middleware("auth")
 Route.patch('/segmentoParceiro/:id', 'SeguimentoParceiroController.update').middleware("auth")
 Route.get('/segmentoParceiro', 'SeguimentoParceiroController.index').middleware("auth")
+Route.get('/segmentoParceiro/:idCategoria', 'SeguimentoParceiroController.indexPorCategoria').middleware("auth")
 
 /*ROTAS ASSOCIADOS*/
 Route.get('/associados','AssociadoController.index').middleware("auth")
@@ -77,6 +78,7 @@ Route.patch('/cde/:id', 'CdeController.update').middleware("auth")
 Route.get('/cde', 'CdeController.index').middleware("auth")
 
 Route.get('/planosInstituicao', 'PlanoInstituicaoController.index').middleware("auth")
+Route.get('/planosParceiro', 'PlanoController.index').middleware("auth")
 Route.get('/dadosBancarios', 'DadosBancariosBoletoController.index').middleware("auth")
 Route.get('/formasPagamento', 'FormaPagamentoController.index').middleware("auth")
 Route.post('/formasPagamento', 'FormaPagamentoController.store').middleware("auth")

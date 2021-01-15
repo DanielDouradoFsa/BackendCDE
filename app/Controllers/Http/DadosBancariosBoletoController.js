@@ -21,7 +21,7 @@ class DadosBancariosBoletoController {
   async index ({ request, response, view }) {
     try {
       const dadosBancarios = await Database
-        .select('*')
+        .select('*','dados_bancarios_boletos.id as pk')
         .table('dados_bancarios_boletos')
       response.send(dadosBancarios)
     } catch (err) {

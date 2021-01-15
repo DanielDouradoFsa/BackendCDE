@@ -7,6 +7,7 @@
 /**
  * Resourceful controller for interacting with planos
  */
+const Database = use('Database')
 class PlanoController {
   /**
    * Show a list of all planos.
@@ -18,6 +19,16 @@ class PlanoController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    try {
+      const planos = await Database
+        .select('*','planos.id as pk')
+        .table('planos')
+      response.send(planos)
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**

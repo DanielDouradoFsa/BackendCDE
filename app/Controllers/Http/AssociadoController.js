@@ -35,7 +35,7 @@ class AssociadoController {
   async index({ request, response, view }) {
     try {
       const associados = await Database
-        .select('*')
+        .select('*','associados.id as pk')
         .table('associados')
         .innerJoin('enderecos', 'associados.id_endereco', 'enderecos.id')
         .innerJoin('users', 'associados.id_user', 'users.id')
