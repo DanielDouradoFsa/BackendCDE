@@ -116,7 +116,6 @@ class ParceiroController {
         Perfil: 'required',
         data_emissao: 'required',
         data_final: 'required',
-        plano_ativo: 'required',
         data_vencimento: 'required',
       }, erroMessage)
 
@@ -162,7 +161,6 @@ class ParceiroController {
         id_colaborador_digitador,
         data_emissao,
         data_final,
-        plano_ativo,
         data_vencimento,
         multa_valor,
         juros_valor,
@@ -229,7 +227,6 @@ class ParceiroController {
         id_forma_pagamento,
         data_emissao,
         data_final,
-        plano_ativo,
         data_vencimento,
         multa_valor,
         juros_valor,
