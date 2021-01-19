@@ -78,10 +78,10 @@ class ColaboradoreController {
         fone_fixo_numero,
         celular_ddd,
         celular_numero,
-        path,
         nome,
         apelido,
         sexo,
+        id_imagem1,
         interno_externo,
         ponto_referencia,
         pessoa_recado,
@@ -89,7 +89,6 @@ class ColaboradoreController {
         fone_numero_recado,
         data_admissao,
         data_demissao,
-        ativo,
         cpf,
         rg_numero,
         rg_data_emissao,
@@ -108,7 +107,6 @@ class ColaboradoreController {
       const user = await User.create({
         email,
         password,
-        ativo,
         username: email
       }, trx)
       const endereco = await Endereco.create({
@@ -126,15 +124,11 @@ class ColaboradoreController {
         celular_ddd,
         celular_numero
       }, trx)
-      const image = await Image.create({
-        path
-        
-      }, trx)
       const colaborador = await Colaborador.create({
         id_telefone: telefone.id,
         id_user: user.id,
         id_endereco: endereco.id,
-        id_foto: image.id,
+        id_foto: id_imagem1,
         nome,
         apelido,
         sexo,
@@ -242,8 +236,8 @@ class ColaboradoreController {
         "fone_numero_recado",
         "data_admissao",
         "data_demissao",
-        "ativo",
         "cpf",
+        "id_imagem1",
         "rg_numero",
         "rg_data_emissao",
         "rg_orgao_emissor",
@@ -277,13 +271,9 @@ class ColaboradoreController {
         "email",
         "password",
       ])
-      const imageReq = request.only([
-        "path"
-      ])
       colaborador.merge({ ...colaboradorReq })
       telefone.merge({ ...telefoneReq })
       endereco.merge({ ...enderecoReq })
-      image.merge({ ...imageReq })
       user.merge({ ...userReq })
 
       await colaborador.save(trx)
