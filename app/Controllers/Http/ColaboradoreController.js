@@ -178,13 +178,11 @@ class ColaboradoreController {
       const colaborador = await Colaborador.findBy('id', request.params.id)
       const endereco = await Endereco.findBy('id', colaborador.id_endereco)
       const telefone = await Telefone.findBy('id', colaborador.id_telefone)
-      const image = await Image.findBy('id', colaborador.id_foto)
       const user = await User.findBy('id', colaborador.id_user)
       const fullParceiro = {
         colaborador,
         endereco,
         telefone,
-        image,
         user
       }
       return response.status(200).json(fullParceiro)

@@ -9,6 +9,7 @@ class AssociadoSchema extends Schema {
       table.increments()
       table.string('nome', 15).notNullable()
       table.string('sobre_nome', 30).notNullable()
+      table.string('sexo',1).notNullable()
       table.bigInteger('cpf').notNullable()
       table.bigInteger('DDD_celular').notNullable()
       table.bigInteger('numero_celular').notNullable()

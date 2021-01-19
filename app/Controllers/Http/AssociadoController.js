@@ -67,6 +67,17 @@ class AssociadoController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
+  async findTitular({ request, response, view }) {
+    try {
+      console.log(request.body.cpf)
+      const associado = await Associado.findBy('cpf',request.body.cpf)
+      return response.status(201).send(associado);
+    } catch (err) {
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
+  }
   async store({ request, response }) {
     const trx = await Database.beginTransaction()
     try {
@@ -74,7 +85,6 @@ class AssociadoController {
         "email.required": "Esse campo é obrigatório",
         "email.unique": "Email já utilizado no sistema",
         "email.email": "Escreva no formato: email@email.com",
-        "ativo.required": "Esse campo é obrigatório",
         "password.required": "Esse campo é obrigatório", //USER
         "isDependente.required": "Esse campo é obrigatório",
         "nome.required": "Esse campo é obrigatório",
@@ -87,7 +97,6 @@ class AssociadoController {
         "numero_celular.required": "Esse campo é obrigatório",
         "numero_celular.integer": "Insira apenas valores numéricos",
         "uf.required": "Esse campo é obrigatório",
-        "uf.integer": "Insira apenas valores numéricos",
         "cidade.required": "Esse campo é obrigatório",
         "cep.required": "Esse campo é obrigatório",
         "cep.integer": "Esse campo é obrigatório",
@@ -99,7 +108,6 @@ class AssociadoController {
       }
       const validation = await validateAll(request.all(), {
         email: "required |unique:users|email",
-        ativo: "required",
         password: "required", //USER
         isDependente: "required",
         nome: "required",
@@ -107,7 +115,7 @@ class AssociadoController {
         cpf: "required|integer|unique:associados",
         DDD_celular: "required|integer",
         numero_celular: "required|integer",
-        uf: "required|integer",
+        uf: "required",
         cidade: "required",
         cep: "required|integer",
         rua: "required",
@@ -125,6 +133,7 @@ class AssociadoController {
         email,
         ativo,
         password, //USER
+        sexo,
         id_associado,
         isDependente,
         nome,
@@ -140,7 +149,7 @@ class AssociadoController {
         complemento,
         bairro,
         id_instituicao,
-        id_foto } = request.all()
+        id_imagem1 } = request.all()
       // if (!ValidaCPF.testaCPF(cpf))
       //   return response.status(400).send({
       //     "message": "CPF inválido",
@@ -178,6 +187,7 @@ class AssociadoController {
       }, trx)
       const associado = await Associado.create({
         nome,
+        sexo,
         sobre_nome,
         isDependente,
         id_associado,
@@ -185,7 +195,7 @@ class AssociadoController {
         DDD_celular,
         numero_celular,
         id_instituicao,
-        id_foto,
+        id_foto:id_imagem1,
         id_user: user.id,
         id_endereco: endereco.id
       }, trx)
@@ -218,7 +228,6 @@ class AssociadoController {
         endereco,
         user
       }
-
       return response.status(200).json(fullParceiro)
 
     } catch (err) {

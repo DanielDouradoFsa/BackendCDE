@@ -62,6 +62,7 @@ Route.get('/segmentoParceiro/:idCategoria', 'SeguimentoParceiroController.indexP
 /*ROTAS ASSOCIADOS*/
 Route.get('/associados','AssociadoController.index').middleware("auth")
 Route.post('/associados', 'AssociadoController.store')
+Route.post('/findAssociado', 'AssociadoController.findTitular').middleware("auth")
 Route.get('/associados/:id','AssociadoController.show').middleware("auth")
 Route.patch('/associados/:id','AssociadoController.update').middleware("auth")
 Route.delete('/associados/:id','AssociadoController.destroy').middleware("auth")

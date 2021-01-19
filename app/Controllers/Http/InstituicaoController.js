@@ -308,11 +308,6 @@ class InstituicaoController {
       const endereco = await Endereco.findBy('id', entidade.id_endereco)
       const telefone = await Telefone.findBy('id', entidade.id_telefone)
       const user = await User.findBy('id', entidade.id_user)
-      // const image1 = await Image.findBy('id', entidade.id_imagem1)
-      // const image2 = await Image.findBy('id', entidade.id_imagem2)
-      // const image3 = await Image.findBy('id', entidade.id_imagem3)
-      // const image4 = await Image.findBy('id', entidade.id_imagem4)
-      // const image5 = await Image.findBy('id', entidade.id_imagem5)
       const fullParceiro = {
         instituicao,
         entidade,
