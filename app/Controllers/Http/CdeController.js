@@ -79,7 +79,6 @@ class CdeController {
         'email.email': 'Escreva no formato email@email.com',
         'password.required': 'Esse campo é obrigatório', //USER
         'uf.required': 'Esse campo é obrigatório',
-        'uf.integer': 'Insira apenas valores numéricos',
         'cidade.required': 'Esse campo é obrigatório',
         'cep.required': 'Esse campo é obrigatório',
         'cep.integer': 'Insira apenas valores numéricos',
@@ -114,7 +113,7 @@ class CdeController {
         email_usuarios: 'required|email',
         email: 'required |unique:users|email',
         password: 'required', //USER
-        uf: 'required |integer',
+        uf: 'required',
         cidade: 'required',
         cep: 'required |integer',
         rua: 'required',
@@ -264,7 +263,6 @@ class CdeController {
       const erroMessage = {
         'email.unique': 'Valor já cadastrado no Sistema',
         'email.email': 'Escreva no formato email@email.com',
-        'uf.integer': 'Insira apenas valores numéricos',
         'cep.integer': 'Insira apenas valores numéricos',
         'numero.integer': 'Insira apenas valores numéricos',
         'fone_fixo_ddd.integer': 'Insira apenas valores numéricos',
@@ -283,7 +281,6 @@ class CdeController {
       }
       const validation = await validateAll(request.all(), {
         email: 'unique:users|email',
-        uf: 'integer',
         cep: 'integer',
         numero: 'integer',
         fone_fixo_ddd: 'integer',

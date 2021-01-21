@@ -89,7 +89,13 @@ class ImageController {
    * @param {View} ctx.view
    */
   async show({ params, response }) {
-    return response.download(Helpers.tmpPath(`uploads/${params.path}`))
+    try{
+      const image = await Image.findBy("id",params.id_foto)
+      return response.download(Helpers.tmpPath(`uploads/${image.path}`))
+    }catch(err){
+
+    }
+    
   }
 
   /**

@@ -30,7 +30,6 @@ class ColaboradoreController {
         .innerJoin('telefones', 'colaboradores.id_telefone', 'telefones.id')
         .innerJoin('enderecos','colaboradores.id_endereco','enderecos.id')
         .innerJoin('users','colaboradores.id_user','users.id')
-        .innerJoin('images','colaboradores.id_foto','images.id')
         .select('*','colaboradores.id as pk')
         
       response.send(colaboradores)

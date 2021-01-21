@@ -22,6 +22,7 @@ const PlanoEscolhido = use('App/Models/PlanoEscolhido')
 const PlanoEscolhidoInstituicao = use('App/Models/PlanoEscolhidoInstituicao')
 const FormaPagamento = use('App/Models/FormaPagamento')
 const TipoCargoResponsavel = use('App/Models/TipoCargoResponsavel')
+const CategoriaInstituicao = use('App/Models/CategoriaInstituicao')
 const { validateAll } = use('Validator')
 class InstituicaoController {
   /**
@@ -304,12 +305,16 @@ class InstituicaoController {
   async show({ params, request, response, view }) {
     try {
       const instituicao = await Instituicao.findBy('id', params.id)
+      const tipoCargoResponsavel = await TipoCargoResponsavel.findBy('id',instituicao.id_responsavel_cargo)
+      const categoriaInstituicao = await CategoriaInstituicao.findBy('id',instituicao.id_categoria_instituicaos)
       const entidade = await Entidade.findBy('id', instituicao.id_entidade)
       const endereco = await Endereco.findBy('id', entidade.id_endereco)
       const telefone = await Telefone.findBy('id', entidade.id_telefone)
       const user = await User.findBy('id', entidade.id_user)
       const fullParceiro = {
         instituicao,
+        tipoCargoResponsavel,
+        categoriaInstituicao,
         entidade,
         endereco,
         telefone,
@@ -347,9 +352,7 @@ class InstituicaoController {
     const trx = await Database.beginTransaction()
     try {
       const erroMessage = {
-        'email.unique': 'Valor já cadastrado no Sistema',
         'email.email': 'Escreva no formato email@email.com',
-        // 'uf.integer': 'Insira apenas valores numéricos',
         'cep.integer': 'Insira apenas valores numéricos',
         'numero.integer': 'Insira apenas valores numéricos',
         'fone_fixo_ddd.integer': 'Insira apenas valores numéricos',
@@ -360,11 +363,10 @@ class InstituicaoController {
         'responsavel_fone_ddd.integer': 'Insira apenas valores numéricos',
         'responsavel_fone_numero.integer': 'Insira apenas valores numéricos',
         'CNPJ.integer': 'Insira apenas valores numéricos',
-        'CNPJ.unique': 'Valor já cadastrado no Sistema',
         'responsavel_cpf.integer': 'Insira apenas valores numéricos',
       }
       const validation = await validateAll(request.all(), {
-        email: 'unique:users|email',
+        email: 'email',
         uf: 'integer',
         cep: 'integer',
         numero: 'integer',
@@ -375,7 +377,7 @@ class InstituicaoController {
         max_dependentes: 'integer',
         responsavel_fone_ddd: 'integer',
         responsavel_fone_numero: 'integer',
-        CNPJ: 'integer |unique:instituicaos',
+        CNPJ: 'integer',
         responsavel_cpf: 'integer',
       }, erroMessage)
 
@@ -448,6 +450,7 @@ class InstituicaoController {
 
       return response.status(201).send({ message: 'Instituicão alterada com sucesso' });
     } catch (err) {
+      await trx.rollback()
       return response.status(400).send({
         error: `Erro: ${err.message}`
       })

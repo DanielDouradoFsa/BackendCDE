@@ -69,7 +69,7 @@ Route.delete('/associados/:id','AssociadoController.destroy').middleware("auth")
 
 /*ROTAS IMAGEM*/
 Route.post('/imagem', 'ImageController.store')
-Route.get('/imagem/:path','ImageController.show')
+Route.get('/imagem/:id_foto','ImageController.show')
 Route.patch('/imagem/:id','ImageController.update')
 
 /*ROTAS ADMINISTRADOR */
