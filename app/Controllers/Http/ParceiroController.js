@@ -259,14 +259,16 @@ class ParceiroController {
    */
   async show({ params, request, response, view }) {
     try {
-      const entidade = await Entidade.findBy('id', request.params.id)
-      const parceiro = await Parceiro.findBy('id_Entidade', entidade.id)
+      const parceiro = await Parceiro.findBy('id', request.params.id)
+      const entidade = await Entidade.findBy('id', parceiro.id_entidade)
       const endereco = await Endereco.findBy('id', entidade.id_endereco)
+      const telefone = await Telefone.findBy('id',entidade.id_telefone)
       const user = await User.findBy('id', entidade.id_user)
       const fullParceiro = {
         entidade,
         parceiro,
         endereco,
+        telefone,
         user
       }
 
