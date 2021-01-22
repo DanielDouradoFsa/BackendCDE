@@ -367,7 +367,6 @@ class InstituicaoController {
       }
       const validation = await validateAll(request.all(), {
         email: 'email',
-        uf: 'integer',
         cep: 'integer',
         numero: 'integer',
         fone_fixo_ddd: 'integer',

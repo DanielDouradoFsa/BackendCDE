@@ -314,7 +314,6 @@ class ParceiroController {
     const trx = await Database.beginTransaction()
     try {
       const erroMessage = {
-        'email.unique': 'Valor já cadastrado no Sistema',
         'email.email': 'Escreva no formato email@email.com',
         'cep.integer': 'Insira apenas valores numéricos',
         'numero.integer': 'Insira apenas valores numéricos',
@@ -326,11 +325,10 @@ class ParceiroController {
         'responsavel_fone_ddd.integer': 'Insira apenas valores numéricos',
         'responsavel_fone_numero.integer': 'Insira apenas valores numéricos',
         'CNPJ.integer': 'Insira apenas valores numéricos',
-        'CNPJ.unique': 'Valor já cadastrado no Sistema',
         'responsavel_cpf.integer': 'Insira apenas valores numéricos',
       }
       const validation = await validateAll(request.all(), {
-        email: 'unique:users|email',
+        email: 'email',
         cep: 'integer',
         numero: 'integer',
         fone_fixo_ddd: 'integer',
