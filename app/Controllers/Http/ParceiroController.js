@@ -21,6 +21,8 @@ const Instituicao = use('App/Models/Instituicao')
 const PlanoEscolhido = use('App/Models/PlanoEscolhido')
 const PlanoEscolhidoParceiro = use('App/Models/PlanoEscolhidoParceiro')
 const FormaPagamento = use('App/Models/FormaPagamento')
+const Segmento = use('App/Models/SegmentoParceiro')
+const Categoria = use('App/Models/CategoriaParceiro')
 const TipoCargoResponsavel = use('App/Models/TipoCargoResponsavel')
 const { validateAll } = use('Validator')
 
@@ -263,12 +265,18 @@ class ParceiroController {
       const entidade = await Entidade.findBy('id', parceiro.id_entidade)
       const endereco = await Endereco.findBy('id', entidade.id_endereco)
       const telefone = await Telefone.findBy('id',entidade.id_telefone)
+      const pivo = await PivoParceiroSegmento.findBy('id_parceiro',parceiro.id )
+      const segmento = await Segmento.findBy('id', pivo.id_segmento)
+      const categoria = await Categoria.findBy('id', segmento.id_categoria)
+
       const user = await User.findBy('id', entidade.id_user)
       const fullParceiro = {
         entidade,
         parceiro,
         endereco,
         telefone,
+        segmento,
+        categoria,
         user
       }
 
