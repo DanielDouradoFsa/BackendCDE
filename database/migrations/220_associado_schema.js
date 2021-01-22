@@ -39,7 +39,7 @@ class AssociadoSchema extends Schema {
         .onUpdate('CASCADE')
         .onDelete('CASCADE');
       
-      table.integer('id_foto').unsigned()
+      table.integer('id_imagem1').unsigned()
         .references('id')
         .inTable('images')
         .onUpdate('CASCADE')

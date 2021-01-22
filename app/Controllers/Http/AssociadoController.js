@@ -35,7 +35,7 @@ class AssociadoController {
   async index({ request, response, view }) {
     try {
       const associados = await Database
-        .select('*','associados.id as pk')
+        .select('*', 'associados.id as pk')
         .table('associados')
         .innerJoin('enderecos', 'associados.id_endereco', 'enderecos.id')
         .innerJoin('users', 'associados.id_user', 'users.id')
@@ -70,7 +70,7 @@ class AssociadoController {
   async findTitular({ request, response, view }) {
     try {
       console.log(request.body.cpf)
-      const associado = await Associado.findBy('cpf',request.body.cpf)
+      const associado = await Associado.findBy('cpf', request.body.cpf)
       return response.status(201).send(associado);
     } catch (err) {
       return response.status(400).send({
@@ -195,7 +195,7 @@ class AssociadoController {
         DDD_celular,
         numero_celular,
         id_instituicao,
-        id_foto:id_imagem1,
+        id_imagem1,
         id_user: user.id,
         id_endereco: endereco.id
       }, trx)
@@ -258,6 +258,54 @@ class AssociadoController {
    * @param {Response} ctx.response
    */
   async update({ params, request, response }) {
+    const trx = await Database.beginTransaction()
+    try {
+      const associado = await Associado.findBy('id', request.params.id)
+      const endereco = await Endereco.findBy('id', associado.id_endereco)
+      const user = await User.findBy('id', associado.id_user)
+
+      const associadoReq = request.only([
+        "nome",
+        "sobre_nome",
+        "sexo",
+        "cpf",
+        "DDD_celular",
+        "numero_celular",
+        "isDependente",
+        "id_associado",
+        "id_instituicao",
+        "id_imagem1",
+      ])
+      const enderecoReq = request.only([
+        "uf",
+        "cidade",
+        "cep",
+        "rua",
+        "numero",
+        "complemento",
+        "bairro"
+      ])
+      const userReq = request.only([
+        "email",
+        "password",
+      ])
+      associado.merge({ ...associadoReq })
+      endereco.merge({ ...enderecoReq })
+      user.merge({ ...userReq })
+
+      await associado.save(trx)
+      await endereco.save(trx)
+      await user.save(trx)
+
+      await trx.commit()
+
+      return response.status(201).send({ message: 'Associado alterado com sucesso' });
+    } catch (err) {
+      await trx.rollback()
+      return response.status(400).send({
+        error: `Erro: ${err.message}`
+      })
+    }
   }
 
   /**
@@ -274,11 +322,11 @@ class AssociadoController {
       const dependentes = await Database.from('associados')
         .where('id_associado', associado.id)
         .innerJoin('users', 'associados.id_user', 'users.id')
-        for (var i in dependentes) {
-          const usuarioDependente = await User.findBy('id', dependentes[i].id_user)
-          usuarioDependente.ativo = false
-          usuarioDependente.save()
-        }
+      for (var i in dependentes) {
+        const usuarioDependente = await User.findBy('id', dependentes[i].id_user)
+        usuarioDependente.ativo = false
+        usuarioDependente.save()
+      }
       const usuarioTitular = await User.findBy('id', associado.id_user)
       usuarioTitular.ativo = false
       usuarioTitular.save()

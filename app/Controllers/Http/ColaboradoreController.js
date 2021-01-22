@@ -127,7 +127,7 @@ class ColaboradoreController {
         id_telefone: telefone.id,
         id_user: user.id,
         id_endereco: endereco.id,
-        id_foto: id_imagem1,
+        id_imagem1,
         nome,
         apelido,
         sexo,
@@ -219,7 +219,6 @@ class ColaboradoreController {
       const colaborador = await Colaborador.findBy('id', request.params.id)
       const endereco = await Endereco.findBy('id', colaborador.id_endereco)
       const telefone = await Telefone.findBy('id', colaborador.id_telefone)
-      const image = await Image.findBy('id', colaborador.id_foto)
       const user = await User.findBy('id', colaborador.id_user)
 
       const colaboradorReq = request.only([
@@ -282,6 +281,7 @@ class ColaboradoreController {
 
       return response.status(201).send({ message: 'Colaborador alterado com sucesso' });
     } catch (err) {
+      await trx.rollback()
       return response.status(400).send({
         error: `Erro: ${err.message}`
       })
