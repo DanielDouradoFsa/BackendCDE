@@ -54,7 +54,7 @@ class ColaboradoreSchema extends Schema {
       table.string('conta_digito', 2).notNullable()
       table.string('pix', 20).notNullable()
 
-      table.integer('id_foto').unsigned()
+      table.integer('id_imagem1').unsigned()
       .references('id')
       .inTable('images')
       .onUpdate('CASCADE')
